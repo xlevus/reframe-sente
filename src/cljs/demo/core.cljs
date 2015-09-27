@@ -4,18 +4,13 @@
     (:require [reagent.core :as reagent :refer [atom]]
               [reagent.session :as session]
               [taoensso.sente  :as sente :refer (cb-success?)]
-              [cljs.core.async :as async :refer (<! >! put! chan)])
+              [re-frame.core :as re-frame]
+              [cljs.core.async :as async :refer (<! >! put! chan)]
+              [demo.handlers]
+              [demo.views :as views]
+              [demo.subs :as subs])
     (:import goog.History))
 
-(let [{:keys [chsk ch-recv send-fn state]}
-      (sente/make-channel-socket! "/chsk" ; Note the same path as before
-       {:type :auto ; e/o #{:auto :ajax :ws}
-       })]
-  (def chsk       chsk)
-  (def ch-chsk    ch-recv) ; ChannelSocket's receive channel
-  (def chsk-send! send-fn) ; ChannelSocket's send API fn
-  (def chsk-state state)   ; Watchable, read-only atom
-  )
 ;; -------------------------
 ;; Views
 
@@ -25,7 +20,8 @@
 ;; -------------------------
 ;; Initialize app
 (defn mount-root []
-  (reagent/render [home-page] (.getElementById js/document "app")))
+  (reagent/render [views/main-panel] (.getElementById js/document "app")))
 
 (defn init! []
+  (re-frame/dispatch-sync [:initialize-db])
   (mount-root))
