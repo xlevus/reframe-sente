@@ -18,7 +18,7 @@
                  [environ "1.0.1"]
                  [org.clojure/clojurescript "1.7.122" :scope "provided"]
                  [secretary "1.2.3"]
-                 [com.taoensso/sente  "1.6.0"]]
+                 [com.taoensso/sente  "1.7.0-beta2"]]
 
   :plugins [[lein-environ "1.0.1"]
             [lein-asset-minifier "0.2.2"]]

@@ -5,18 +5,20 @@
 (defn hello-world []
   (let [who (re-frame/subscribe [:name])]
     (fn []
-      [:div "Hello, " @who])))
+      [:div "Not Connected, " @who])))
 
 
 (defn counter []
   (let [c (re-frame/subscribe [:count])]
     (fn []
       [:div "Count: " @c 
-       [:button {:on-click #(re-frame/dispatch [:increment-count 1])} "+" ]
-       [:button {:on-click #(re-frame/dispatch [:increment-count -1])} "-" ]])))
+       [:button {:on-click #(re-frame/dispatch [:ws/send :z/increment {:count 1}])} "+" ]
+       [:button {:on-click #(re-frame/dispatch [:ws/send :z/increment {:count -1}])} "-" ]])))
 
 
 (defn main-panel []
-  [:div 
-   [hello-world]
-   [counter]])
+  (let [connected? (re-frame/subscribe [:ws/connected])]
+    (fn []
+      (if connected?
+        [:div [counter]]
+        [:div [hello-world]]))))
