@@ -7,8 +7,11 @@
             [prone.middleware :refer [wrap-exceptions]]
             [ring.middleware.reload :refer [wrap-reload]]
             [environ.core :refer [env]]
+            [clojure.core.async :as async :refer (go-loop <!)]
             [taoensso.sente :as sente]
             [taoensso.sente.server-adapters.http-kit :refer (sente-web-server-adapter)]))
+
+(def shared-db (atom {:counter 0}))
 
 (def home-page
   (html
@@ -20,11 +23,8 @@
      (include-css (if (env :dev) "css/site.css" "css/site.min.css"))]
     [:body
      [:div#app
-      [:h3 "ClojureScript has not been compiled!"]
-      [:p "please run "
-       [:b "lein figwheel"]
-       " in order to start the compiler"]]
-     (include-js "js/app.js")]]))
+      [:h3 "Loading..."]]]
+     (include-js "js/app.js")]))
 
 
 (let [{:keys [ch-recv send-fn ajax-post-fn ajax-get-or-ws-handshake-fn
@@ -36,6 +36,17 @@
   (def chsk-send!                    send-fn) ; ChannelSocket's send API fn
   (def connected-uids                connected-uids) ; Watchable, read-only atom
   )
+
+
+(defn start-sync! 
+  "Start a background thread to sync our shared DB"
+  []
+  (go-loop [i 0]
+    (<! (async/timeout 1000))
+    (doseq [uid (:any @connected-uids)]
+      (chsk-send! uid [:state/sync @shared-db]))
+    (recur (inc i))))
+
 
 (defroutes routes
   (GET  "/" [] home-page)
