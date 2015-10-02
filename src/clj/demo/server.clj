@@ -6,5 +6,4 @@
 
 (defn -main [& args]
   (let [port (Integer/parseInt (or (env :port) "3000"))]
-    (run-server app {:port port :join? false})
-    (start-sync!)))
+    (run-server app {:port port :join? false})))

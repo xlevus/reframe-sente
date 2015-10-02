@@ -9,14 +9,15 @@
   :initialize-db
   (fn [_ _]
     {:name "Fred"
-     :count 0
-     :ws/connected false}))
+     :ws/connected false
+     :shared {:count 0}}))
 
 
 (re-frame/register-handler
   :increment-count
   (fn [db [_ delta]]
-    (update-in db [:count] + delta)))
+    (ws/chsk-send! [:counter/incr {:delta delta}])
+    (update-in db [:shared :count] + delta)))
 
 
 (re-frame/register-handler
@@ -31,3 +32,8 @@
     (debugf "Sending: %s %s" command data)
     (ws/chsk-send! [command data])))
 
+(re-frame/register-handler
+  :state/sync
+  (fn [db [_ new-db]]
+    (debugf "Syncing state %s" new-db)
+    (assoc db :shared new-db)))

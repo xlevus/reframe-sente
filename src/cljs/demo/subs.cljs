@@ -1,6 +1,8 @@
 (ns demo.subs
   (:require-macros [reagent.ratom :refer [reaction]])
-  (:require [re-frame.core :as re-frame]))
+  (:require [re-frame.core :as re-frame]
+            [taoensso.encore :as encore :refer (debugf)]
+            ))
 
 
 (re-frame/register-sub
@@ -12,16 +14,12 @@
 (re-frame/register-sub
   :count
   (fn [db]
-    (reaction (:count @db))))
+    (reaction (-> @db
+                  :shared
+                  :count))))
 
 (re-frame/register-sub
   :ws/connected
   (fn [db]
     (reaction (:ws/connected @db))))
-
-
-(re-frame/register-sub
-  :ws/recv
-  (fn [db]))
-
 

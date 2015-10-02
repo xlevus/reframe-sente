@@ -29,13 +29,18 @@
   (re-frame/dispatch [:ws/connected (= ?data {:first-open? true})] ))
 
 
+(defmethod event-msg-handler :chsk/handshake
+  [{:as ev-msg :keys [?data]}]
+  ; ???
+  )
+
+
 (defmethod event-msg-handler :chsk/recv
   [{:as ev-msg :keys [?data]}]
-  (debugf "Recv: %s" ?data))
+    (re-frame/dispatch ?data))
 
 
 (defn event-msg-handler* [{:as ev-msg :keys [id ?data event]}]
-  (debugf "WS Event: %s" event)
   (event-msg-handler ev-msg))
 
 
