@@ -32,12 +32,10 @@
 (defn event-msg-handler* [{:as ev-msg :keys [id ?data event]}]
   (event-msg-handler ev-msg))
 
+
 (defmethod event-msg-handler :default
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
-    (println (format "Unhandled event: %s %s" event ?data))
-    (when ?reply-fn
-      (?reply-fn {:echo event})))
-
+    (println (format "Unhandled event: %s %s" event ?data)))
 
 
 (defmethod event-msg-handler :counter/incr
