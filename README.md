@@ -1,4 +1,6 @@
 Reframe & Sente
 ===============
 
-This is a simple demo application joining re-frame and sente.
+Simple demo application joining re-frame and sente.
+
+Changes to the shared-state atom on the server are pushed to clients as a diff.

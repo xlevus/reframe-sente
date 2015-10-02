@@ -4,10 +4,9 @@
             ))
 
 
-(defn hello-world []
-  (let [who (re-frame/subscribe [:name])]
-    (fn []
-      [:div "Not Connected, " @who])))
+(defn disconnected []
+  (fn []
+    [:div "You are not connected"]))
 
 
 (defn counter []
@@ -21,6 +20,6 @@
 (defn main-panel []
   (let [connected? (re-frame/subscribe [:ws/connected])]
     (fn []
-      (if connected?
+      (if @connected?
         [:div [counter]]
-        [:div [hello-world]]))))
+        [:div [disconnected]]))))

@@ -9,8 +9,7 @@
 (re-frame/register-handler
   :initialize-db
   (fn [_ _]
-    {:name "Fred"
-     :ws/connected false
+    {:ws/connected false
      :shared {:count 0}}))
 
 
@@ -24,6 +23,7 @@
 (re-frame/register-handler
   :ws/connected
   (fn [db [_ connected?]]
+    (if connected? (ws/chsk-send! [:state/sync]))
     (assoc db :ws/connected connected?)))
 
 
@@ -32,6 +32,7 @@
   (fn [db [_  command & data]]
     (debugf "Sending: %s %s" command data)
     (ws/chsk-send! [command data])))
+
 
 (re-frame/register-handler
   :state/sync

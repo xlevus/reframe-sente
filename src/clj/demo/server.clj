@@ -1,5 +1,5 @@
 (ns demo.server
-  (:require [demo.handler :refer [app start-sync!]]
+  (:require [demo.handler :refer [app]]
             [environ.core :refer [env]]
             [org.httpkit.server :refer [run-server]])
   (:gen-class))

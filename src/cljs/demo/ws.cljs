@@ -25,8 +25,8 @@
 
 (defmethod event-msg-handler :chsk/state
   [{:as ev-msg :keys [?data]}]
-  
-  (re-frame/dispatch [:ws/connected (= ?data {:first-open? true})] ))
+  (debugf "%s" ?data)  
+  (re-frame/dispatch [:ws/connected (:open? ?data)] ))
 
 
 (defmethod event-msg-handler :chsk/handshake

@@ -38,13 +38,14 @@
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
     (println (format "Unhandled event: %s %s" event ?data)))
 
+(defmethod event-msg-handler :chsk/ws-ping [ev-msg]
+  )
+
 (defmethod event-msg-handler :state/sync [ev-msg]
-  (broadcast [:state/sync shared-db]))
+  (broadcast [:state/sync @shared-db]))
 
 (defmethod event-msg-handler :counter/incr
-  ; Increment the counter locally. the sync loop should update the clients.
-  ; We should probably be doing a diff of the shared state, and pushing changes
-  ; to clients instead.
+  ; Increment the counter locally. The watcher will push the state to clients.
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
   (reset! shared-db (update-in @shared-db [:count] + (:delta ?data))))
 
@@ -55,5 +56,4 @@
   (stop-router!)
   (reset! router (sente/start-chsk-router! ch-chsk event-msg-handler*)))
 
-; (start-sync!) ; No idea where this goes with figwheel. Whatev. Demo.
 (start-router!)
