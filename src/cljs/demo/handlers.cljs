@@ -1,5 +1,6 @@
 (ns demo.handlers
   (:require [re-frame.core :as re-frame]
+            [differ.core :as differ]
             [taoensso.encore :as encore :refer (debugf)]
             [demo.ws :as ws]
             ))
@@ -37,3 +38,9 @@
   (fn [db [_ new-db]]
     (debugf "Syncing state %s" new-db)
     (assoc db :shared new-db)))
+
+
+(re-frame/register-handler
+  :state/diff
+  (fn [db [_ diff]]
+    (assoc db :shared (differ/patch (:shared db) diff))))
