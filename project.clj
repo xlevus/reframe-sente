@@ -12,6 +12,7 @@
                  [reagent-utils "0.1.5"]
                  [re-frame "0.4.1"]
                  [ring "1.4.0"]
+                 [ring-server "0.4.0"]
                  [ring/ring-defaults "0.1.5"]
                  [prone "0.8.2"]
                  [compojure "1.4.0"]
